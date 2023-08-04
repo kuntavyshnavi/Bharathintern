@@ -1,0 +1,59 @@
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+import pandas as pd
+%matplotlib inline
+from google.colab import drive
+drive.mount('/content/drive')
+iris = pd.read_csv('/content/drive/MyDrive/Iris.csv')
+print(iris)
+iris.head()
+iris.tail()
+print(iris.shape)
+print(iris.describe())
+print(iris.isna().sum())
+print(iris.describe())
+n = len(iris[iris['Species'] == 'versicolor'])
+print("No of Versicolor in Dataset:",n)
+n1 = len(iris[iris['Species'] == 'virginica'])
+print("No of Virginica in Dataset:",n1)
+n2 = len(iris[iris['Species'] == 'setosa'])
+print("No of Setosa in Dataset:",n2)
+fig = plt.figure()
+ax = fig.add_axes([0,0,1,1])
+ax.axis('equal')
+l = ['Versicolor', 'Setosa', 'Virginica']
+s = [50,50,50]
+ax.pie(s, labels = l,autopct='%1.2f%%')
+plt.show()
+iris.tail(100)
+iris.hist()
+plt.show()
+sns.pairplot(iris,hue='Species');
+corr_mat = iris.corr()
+print(corr_mat)
+import plotly.express as px
+fig = px.scatter(iris, x="SepalWidthCm", y="SepalLengthCm", color="Species")
+fig.show()
+from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import train_test_split
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn import svm
+from sklearn import metrics
+from sklearn.tree import DecisionTreeClassifier
+train, test = train_test_split(iris, test_size = 0.25)
+print(train.shape)
+print(test.shape)
+train_X = train[['SepalLengthCm', 'SepalWidthCm', 'PetalLengthCm',
+                 'PetalWidthCm']]
+train_y = train.Species
+
+test_X = test[['SepalLengthCm', 'SepalWidthCm', 'PetalLengthCm',
+                 'PetalWidthCm']]
+test_y = test.Species
+train_X.head()
+train_y.head()
+model = LogisticRegression()
+model.fit(train_X, train_y)
+prediction = model.predict(test_X)
+print('Accuracy:',metrics.accuracy_score(prediction,test_y))
